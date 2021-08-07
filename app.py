@@ -32,6 +32,18 @@ def delete(id):
     return redirect('/posts')
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login(id):
+
+    if request.method == "POST":
+        post = Card.query.get_or_404(id)
+        db.session.delete(post)
+        db.session.commit()
+        return redirect('/posts')
+    else:
+        return render_template('login.html')
+
+
 @app.route('/posts/edit/<int:id>', methods=["GET", "POST"])
 def edit(id):
 

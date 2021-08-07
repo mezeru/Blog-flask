@@ -6,6 +6,10 @@
 
 {% block body %} 
 
+<div class="mt-4">
+    <button id="add" class="btn btn-success">Add New +</button>
+   
+    <div id=newpost>
     <hr>
     <h2 class="display-4" >Add New Post</h2>
     <form action="/posts" method="POST">
@@ -15,9 +19,11 @@
         <label class="lead mb-2" >Content</label>
         <textarea class="form-control" type="text" name="content" id="content" placeholder="Enter Content of the Post"></textarea>
         <br>
-        <input type="submit" value="POST" class="btn btn-success">
+        <input type="submit" value="POST" class="btn btn-primary">
     </form>
+    </div>
     <hr>
+</div>
 
 
     {% for post in posts %}
@@ -27,7 +33,6 @@
             <p style="font-size: 12px; color: grey;">Written by {{post.author}}</p>
             <hr>
             <p class="card-text mb-2 mt-2" >{{ post.content }}</p>
-            <hr>
             <div style="display: flex;flex-direction: row;justify-content: space-evenly;">
                 <a class="btn btn-primary mb-2 mt-2" href="/posts/edit/{{post.id}}">Edit</a>
                 <a class="btn btn-danger mb-2 mt-2" href="/posts/delete/{{post.id}}">Delete</a>
