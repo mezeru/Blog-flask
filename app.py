@@ -1,6 +1,10 @@
+from os import name
 import flask
+from flask import request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+
+from werkzeug.utils import redirect
 
 app = flask.Flask(__name__)
 
@@ -19,23 +23,20 @@ class Card(db.Model):
         return "Blog Post " + str(self.id)
 
 
-all_posts = [
-    {
-        'name': 'First',
-        'content': 'This is content of post one'
-    },
-    {
-        'name': 'Second',
-        'content': 'This is content of post two'
-    }
-]
-
-
 @app.route('/posts')
 def posts():
-    return(
-        flask.render_template('posts.html', posts=all_posts)
-    )
+
+    if request.method == "POST":
+        postName = request.form['name']
+        postContent = request.form['content']
+        newCard = Card(name=postName, content=postContent)
+        db.session.add(newCard)
+        return redirect('/posts')
+    else:
+        allPosts = Card.query.order_by(Card.id).all()
+        return(
+            flask.render_template('posts.html', posts=allPosts)
+        )
 
 
 @app.route("/")
