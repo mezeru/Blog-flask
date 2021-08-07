@@ -7,22 +7,31 @@
 {% block body %} 
 
     <hr>
-    <h2>Create New</h2>
+    <h2 class="display-4" >Add New Post</h2>
     <form action="/posts" method="POST">
-        Name:<input type="text" name="name" id="name">
+        <label class="lead mb-2">Name</label> 
+        <input type="text" name="name" id="name" class="form-control" placeholder="Enter Name of the Post">
         <br>
-        Content:<input type="text" name="content" id="content">
+        <label class="lead mb-2" >Content</label>
+        <textarea class="form-control" type="text" name="content" id="content" placeholder="Enter Content of the Post"></textarea>
         <br>
-        <input type="submit" value="Post">
+        <input type="submit" value="POST" class="btn btn-primary">
     </form>
     <hr>
 
 
     {% for post in posts %}
-    <div class="card">
+    <div class="card" style="display: flex;flex-direction: column;">
         <div class="card-body">
-            <h1 class="card-title" >{{ post.name }}</h1>
-            <p class="card-text" >{{ post.content }}</p>
+            <h1 class="card-title" style="font-size: xx-large;" >{{ post.name }}</h1>
+            <hr>
+            <p class="card-text mb-2 mt-2" >{{ post.content }}</p>
+            <hr>
+            <div style="display: flex;flex-direction: row;justify-content: space-evenly;">
+                <a class="btn btn-primary mb-2 mt-2" href="/posts/delete/{{post.id}}">Edit</a>
+                <a class="btn btn-danger mb-2 mt-2" href="/posts/delete/{{post.id}}">Delete</a>
+                
+            </div>
         </div>
     </div>
     {% endfor %}

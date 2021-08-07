@@ -1,14 +1,13 @@
 from os import name
 import flask
-from flask import request
+from flask import request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-
-from werkzeug.utils import redirect
 
 app = flask.Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
@@ -23,7 +22,23 @@ class Card(db.Model):
         return "Blog Post " + str(self.id)
 
 
-@app.route('/posts')
+@app.route('/posts/delete/<int:id>')
+def delete(id):
+    post = Card.query.get_or_404(id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect('/posts')
+
+
+@app.route('/posts/edit/<int:id>', methods=["GET", "POSTS"])
+def edit(id):
+    post = Card.query.get_or_404(id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect('/posts')
+
+
+@app.route('/posts', methods=["GET", "POST"])
 def posts():
 
     if request.method == "POST":
@@ -31,9 +46,11 @@ def posts():
         postContent = request.form['content']
         newCard = Card(name=postName, content=postContent)
         db.session.add(newCard)
+        db.session.commit()
         return redirect('/posts')
+
     else:
-        allPosts = Card.query.order_by(Card.id).all()
+        allPosts = Card.query.order_by(Card.id.desc()).all()
         return(
             flask.render_template('posts.html', posts=allPosts)
         )
