@@ -2,7 +2,21 @@
 
 {% block head %} <title>Posts</title> {% endblock %}
 
+
+
 {% block body %} 
+
+    <hr>
+    <h2>Create New</h2>
+    <form action="/posts" method="POST">
+        Title:<input type="text" name="title" id="title">
+        <br>
+        Content:<input type="text" name="content" id="content">
+        <br>
+        <input type="submit" value="Post">
+    </form>
+    <hr>
+
 
     {% for post in posts %}
     <div class="card">
