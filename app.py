@@ -1,6 +1,7 @@
 from os import name
 import flask
 from flask import request, redirect
+from flask.templating import render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -30,12 +31,17 @@ def delete(id):
     return redirect('/posts')
 
 
-@app.route('/posts/edit/<int:id>', methods=["GET", "POSTS"])
+@app.route('/posts/edit/<int:id>', methods=["GET", "POST"])
 def edit(id):
-    post = Card.query.get_or_404(id)
-    db.session.delete(post)
-    db.session.commit()
-    return redirect('/posts')
+
+    if request.method == "POST":
+        post = Card.query.get_or_404(id)
+        post.name = request.form['name']
+        post.content = request.form['content']
+        db.session.commit()
+        return redirect('/posts')
+    else:
+        return render_template("edit.html", post=Card.query.get_or_404(id))
 
 
 @app.route('/posts', methods=["GET", "POST"])
